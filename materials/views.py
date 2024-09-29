@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from materials.models import Courses, Lesson
-from materials.serializers import CoursesSerializer, LessonSerializer
+from materials.serializers import CoursesSerializer, LessonSerializer, CoursesDetailSerializer
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from django.shortcuts import render
 
@@ -8,7 +8,12 @@ from django.shortcuts import render
 # Create your views here.
 class CoursesViewSet(ModelViewSet):
     queryset = Courses.objects.all()
-    serializer_class = CoursesSerializer
+
+    # переопределяем и проверяем. Если у нас действие retrieve, то мы выводим DogDetailSerializer
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return CoursesDetailSerializer
+        return CoursesSerializer
 
 
 class LessonListAPIView(ListAPIView):
