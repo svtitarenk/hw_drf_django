@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from materials.models import Courses, Lesson
+
 NULLABLE = {"null": True, "blank": True}
 
 
@@ -19,3 +21,53 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+class Payments(models.Model):
+
+    CASH = 'cash'
+    TRANSFER = 'transfer'
+
+    PAYMENT_TYPE_CHOICES = [
+        (CASH, 'наличные'),
+        (TRANSFER, 'перевод на счет'),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь',
+        help_text='Введите имя пользователя',
+        related_name='user_payment',
+    )
+    payment_date = models.DateField(auto_now_add=True)
+    course = models.ForeignKey(
+        Courses,
+        on_delete=models.CASCADE,
+        verbose_name='Курс',
+        help_text='Выберите курс',
+        related_name='course',
+        **NULLABLE
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name='Урок',
+        help_text='Выберите урок',
+        related_name='lesson',
+        **NULLABLE
+    )
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_type = models.CharField(
+        max_length=10,
+        choices=PAYMENT_TYPE_CHOICES,
+        verbose_name='тип оплаты',
+        help_text='Выберите тип оплаты'
+    )
+
+    def __stt__(self):
+        return f'Платеж {self.payment_date} на курс {self.course} урок {self.lesson} на сумму: {self.amount}'
+
+    class Meta:
+        verbose_name = 'Платеж'
+        verbose_name_plural = 'Платежи'
