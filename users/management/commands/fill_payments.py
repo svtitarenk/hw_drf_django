@@ -15,6 +15,16 @@ class Command(BaseCommand):
              'payment_type': 'cash'},
             {'user_id': 1, 'payment_date': '2024-01-01', 'course_id': 1, 'lesson_id': 3, 'amount': 3000,
              'payment_type': 'cash'},
+            {'user_id': 2, 'payment_date': '2023-01-01', 'course_id': 1, 'lesson_id': 1, 'amount': 1000,
+             'payment_type': 'cash'},
+            {'user_id': 2, 'payment_date': '2023-02-01', 'course_id': 1, 'lesson_id': 1, 'amount': 1000,
+             'payment_type': 'transfer'},
+            {'user_id': 2, 'payment_date': '2023-03-01', 'course_id': 1, 'lesson_id': 1, 'amount': 1000,
+             'payment_type': 'transfer'},
+            {'user_id': 2, 'payment_date': '2023-01-01', 'course_id': 1, 'lesson_id': 2, 'amount': 2000,
+             'payment_type': 'cash'},
+            {'user_id': 2, 'payment_date': '2023-01-01', 'course_id': 1, 'lesson_id': 3, 'amount': 3000,
+             'payment_type': 'cash'},
         ]
 
         # payments_list = [

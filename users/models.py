@@ -46,7 +46,7 @@ class Payments(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Курс',
         help_text='Выберите курс',
-        related_name='course',
+        related_name='courses',
         **NULLABLE
     )
     lesson = models.ForeignKey(
@@ -54,7 +54,7 @@ class Payments(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Урок',
         help_text='Выберите урок',
-        related_name='lesson',
+        related_name='lessons',
         **NULLABLE
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2)

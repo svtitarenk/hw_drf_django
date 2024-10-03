@@ -12,13 +12,11 @@ class PaymentsSerializer(ModelSerializer):
 
 
 class UserSerializer(ModelSerializer):
-    user_payment = PaymentsSerializer()
+    payments = PaymentsSerializer(source="user_payment", many=True)
 
     def get_user_payment(self, user):
         return Payments.objects.filter(user=user)
 
     class Meta:
         model = User
-        fields = '__all__'
-        # fields = (')id', 'username', 'email', 'payments')
-        # fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', 'payments')
