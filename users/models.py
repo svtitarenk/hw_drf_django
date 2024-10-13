@@ -27,7 +27,6 @@ class User(AbstractUser):
 
 
 class Payments(models.Model):
-
     CASH = 'cash'
     TRANSFER = 'transfer'
 
@@ -75,3 +74,28 @@ class Payments(models.Model):
     class Meta:
         verbose_name = 'Платеж'
         verbose_name_plural = 'Платежи'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+        verbose_name='Пользователь'
+    )
+    course = models.ForeignKey(
+        Courses,
+        on_delete=models.CASCADE,
+        related_name='subscribers',
+        verbose_name='Курс'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.course}'
+
+    class Meta:
+        unique_together = ('user', 'course')  # Уникальность подписки для пользователя и курса
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        ordering = ['user']
