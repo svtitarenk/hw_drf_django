@@ -1,14 +1,18 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import CreateAPIView
+from rest_framework import generics
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
-from users.models import User, Payments
+
+from materials.models import Courses
+from users.models import User, Payments, Subscription
 from users.permissions import IsOwner
 from users.serializers import UserSerializer, PaymentsSerializer, UserShortSerializer
 
 
-class UserCreateAPIView(CreateAPIView):
+class UserCreateAPIView(generics.CreateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (AllowAny,)  # разрешаем всех пользователей создавать аккаунты, без авторизации
@@ -50,3 +54,29 @@ class PaymentsViewSet(ModelViewSet):
     filterset_fields = ('course', 'lesson', 'payment_type',)
 
     serializer_class = PaymentsSerializer
+
+
+class SubscriptionAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Courses.objects.all()  # Определяем набор данных, который будет использоваться
+    lookup_field = 'id'  # Поле, по которому будем искать курс
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        course_id = request.data.get('course_id')
+
+        # Используем GenericAPIView для получения объекта курса
+        course = get_object_or_404(self.get_queryset(), id=course_id)
+
+        # Получаем или создаем подписку
+        subscription, created = Subscription.objects.get_or_create(user=user, course=course)
+
+        if not created:
+            # Если подписка уже существует, удаляем ее
+            subscription.delete()
+            message = 'Подписка удалена'
+        else:
+            # Если подписки нет, создаем новую
+            message = 'Подписка добавлена'
+
+        return Response({"message": message})
