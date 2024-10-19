@@ -99,3 +99,51 @@ class Subscription(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         ordering = ['user']
+
+
+class Payment(models.Model):
+    amount = models.PositiveIntegerField(
+        verbose_name='Сумма оплаты',
+        help_text='Укажите сумму',
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата создания',
+        help_text='Дата создания оплаты',
+        **NULLABLE,
+    )
+    session_id = models.CharField(
+        max_length=255,
+        **NULLABLE,
+        verbose_name='id сессии',
+        help_text='Укажите id сессии',
+    )
+    link = models.URLField(
+        max_length=400,
+        **NULLABLE,
+        verbose_name='Ссылка на оплату',
+        help_text='Укажите ссылку на оплату',
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        help_text='Укажите пользователя',
+        on_delete=models.CASCADE,
+        **NULLABLE,
+    )
+    course = models.ForeignKey(
+        Courses,
+        on_delete=models.CASCADE,
+        related_name='payment_course',
+        verbose_name='Курс',
+        **NULLABLE,
+    )
+
+    class Meta:
+        verbose_name = "Оплата"
+        verbose_name_plural = "Оплаты"
+        ordering = ['user']
+
+    def __str__(self):
+        return f'{self.amount} руб. от {self.user}'
+

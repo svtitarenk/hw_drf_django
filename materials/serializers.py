@@ -2,7 +2,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework import serializers
 from materials.models import Courses, Lesson
 from materials.validators import UrlValidator
-from users.models import Subscription
+from users.models import Subscription, Payment
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -43,3 +43,10 @@ class CoursesDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'name', 'description', 'owner', 'lessons', 'lessons_count', 'is_subscribed']
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payment
+        fields = '__all__'
