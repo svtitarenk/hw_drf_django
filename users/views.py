@@ -58,8 +58,10 @@ class PaymentsViewSet(ModelViewSet):
 
 class SubscriptionAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Courses.objects.all()  # Определяем набор данных, который будет использоваться
-    lookup_field = 'id'  # Поле, по которому будем искать курс
+    # Определяем набор данных, который будет использоваться
+    queryset = Courses.objects.all()
+    # Поле, по которому будем искать курс
+    lookup_field = "id"
 
     def post(self, request, *args, **kwargs):
         user = request.user
